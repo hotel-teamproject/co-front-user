@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { FaStar, FaMapMarkerAlt, FaHeart, FaShare } from "react-icons/fa";
+import { FaStar, FaMapMarkerAlt, FaHeart, FaShare, FaChevronRight, FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import HotelGalleryModal from "./HotelGalleryModal";
 import "../../styles/components/hotelpage/HotelDetailHeader.scss";
 
 const HotelDetailHeader = ({ hotel }) => {
@@ -10,6 +11,9 @@ const HotelDetailHeader = ({ hotel }) => {
  const [dateRange, setDateRange] = useState([null, null]);
  const [startDate, endDate] = dateRange;
  const [guests, setGuests] = useState(2);
+ const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
+ const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+ const [isFavorite, setIsFavorite] = useState(false);
  if (!hotel) {
   return <div className="hotel-detail-header loading">Loading...</div>;
  }
@@ -39,6 +43,7 @@ const HotelDetailHeader = ({ hotel }) => {
  };
 
  const handleFavorite = () => {
+  setIsFavorite(!isFavorite);
   console.log("Add to favorites");
  };
 
@@ -55,21 +60,47 @@ const HotelDetailHeader = ({ hotel }) => {
   navigate(`/booking/${hotel._id || hotel.id}?${params.toString()}`);
  };
 
+ const handleImageClick = (index) => {
+  setSelectedImageIndex(index);
+  setIsGalleryModalOpen(true);
+ };
+
+ const handleCloseGalleryModal = () => {
+  setIsGalleryModalOpen(false);
+ };
+
  return (
   <div className="hotel-detail-header">
    <div className="header-top">
-    <div className="breadcrumb">
-     <span>{city || "Location"}</span> &gt; <span>{location || "Area"}</span>{" "}
-     &gt; <span>{name}</span>
-    </div>
+    <nav className="breadcrumb">
+     <a href="/" className="breadcrumb-item">
+      <FaHome className="breadcrumb-icon" />
+      <span>홈</span>
+     </a>
+     <FaChevronRight className="breadcrumb-separator" />
+     <span className="breadcrumb-item">{city || "Location"}</span>
+     <FaChevronRight className="breadcrumb-separator" />
+     <span className="breadcrumb-item">{location || "Area"}</span>
+     <FaChevronRight className="breadcrumb-separator" />
+     <span className="breadcrumb-item breadcrumb-current">{name}</span>
+    </nav>
     <div className="header-actions">
-     <button className="icon-btn" onClick={handleFavorite}>
+     <button 
+      className={`action-btn favorite-btn ${isFavorite ? "active" : ""}`} 
+      onClick={handleFavorite}
+      aria-label="좋아요"
+     >
       <FaHeart />
+      <span className="btn-label">저장</span>
      </button>
-     <button className="icon-btn" onClick={handleShare}>
+     <button 
+      className="action-btn share-btn" 
+      onClick={handleShare}
+      aria-label="공유"
+     >
       <FaShare />
+      <span className="btn-label">공유</span>
      </button>
-     <span className="user-name">Tomhoon</span>
     </div>
    </div>
 
@@ -92,7 +123,7 @@ const HotelDetailHeader = ({ hotel }) => {
     </div>
     <div className="price-section">
      <div className="price-wrapper">
-      <span className="price">₩{hotel.basePrice.toLocaleString()}</span>
+      <span className="price">₩{hotel.basePrice.toLocaleString()}~</span>
       <span className="price-unit">/night</span>
      </div>
      <button className="btn-book-now" onClick={handleBookNow}>
@@ -102,7 +133,7 @@ const HotelDetailHeader = ({ hotel }) => {
    </div>
 
    <div className="hotel-images">
-    <div className="main-image">
+    <div className="main-image" onClick={() => handleImageClick(0)}>
      <img
       src={
        images[0] ||
@@ -113,7 +144,11 @@ const HotelDetailHeader = ({ hotel }) => {
     </div>
     <div className="sub-images">
      {images.slice(1, 5).map((img, index) => (
-      <div key={index} className="sub-image">
+      <div
+       key={index}
+       className="sub-image"
+       onClick={() => handleImageClick(index + 1)}
+      >
        <img src={img} alt={`${name} ${index + 2}`} />
        {index === 3 && images.length > 5 && (
         <div className="view-all-overlay">
@@ -124,6 +159,15 @@ const HotelDetailHeader = ({ hotel }) => {
      ))}
     </div>
    </div>
+
+   {isGalleryModalOpen && (
+    <HotelGalleryModal
+     images={images}
+     hotelName={name}
+     initialIndex={selectedImageIndex}
+     onClose={handleCloseGalleryModal}
+    />
+   )}
   </div>
  );
 };

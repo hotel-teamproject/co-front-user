@@ -13,10 +13,6 @@ import HotelListPage from "./pages/search/HotelListPage";
 import HotelDetailPage from "./pages/hotel/HotelDetailPage";
 
 import BookingStepLayout from "./pages/booking/BookingStepLayout";
-import BookingStepDates from "./pages/booking/BookingStepDates";
-import BookingStepRoom from "./pages/booking/BookingStepRoom";
-import BookingStepExtras from "./pages/booking/BookingStepExtras";
-import BookingStepPayment from "./pages/booking/BookingStepPayment";
 import BookingComplete from "./pages/booking/BookingComplete";
 
 import LoginPage from "./pages/auth/LoginPage";
@@ -73,18 +69,16 @@ const AppRouter = () => {
        <BookingStepLayout />
       </ProtectedRoute>
      }
-    >
-     {/* /booking/:hotelId */}
-     <Route index element={<BookingStepDates />} />
-     {/* /booking/:hotelId/room */}
-     <Route path="room" element={<BookingStepRoom />} />
-     {/* /booking/:hotelId/extras */}
-     <Route path="extras" element={<BookingStepExtras />} />
-     {/* /booking/:hotelId/payment */}
-     <Route path="payment" element={<BookingStepPayment />} />
+    />
      {/* /booking/:hotelId/complete */}
-     <Route path="complete" element={<BookingComplete />} />
-    </Route>
+     <Route
+      path="booking/:hotelId/complete"
+      element={
+       <ProtectedRoute>
+        <BookingComplete />
+       </ProtectedRoute>
+      }
+     />
 
     {/* 고객센터 / 공지 / FAQ / 문의 */}
     <Route path="support">

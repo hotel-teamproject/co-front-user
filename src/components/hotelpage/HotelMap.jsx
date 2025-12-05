@@ -15,16 +15,8 @@ const HotelMap = ({ address, location }) => {
   <div className="hotel-map">
    <div className="map-info">
     <h3>📍 위치</h3>
-    <p className="address">{address}</p>
     {location && <p className="location">{location}</p>}
-    <a
-     href={mapsLink}
-     target="_blank"
-     rel="noopener noreferrer"
-     className="map-link"
-    >
-     Google Maps에서 보기 →
-    </a>
+    <p className="address">{address}</p>
    </div>
    <div className="map-container">
     <iframe
@@ -37,6 +29,14 @@ const HotelMap = ({ address, location }) => {
      allowFullScreen
     />
    </div>
+   <a
+    href={mapsLink}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="map-link"
+   >
+    Google Maps에서 보기 →
+   </a>
   </div>
  );
 };

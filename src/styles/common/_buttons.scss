@@ -132,3 +132,17 @@
     text-decoration: underline;
   }
 }
+
+/* ================================
+   🔥 3. SECONDARY 버튼
+   ================================ */
+.btn--secondary {
+  background: transparent !important;
+  color: $color-text !important;
+  border-color: $color-border !important;
+
+  &:hover {
+    background: $color-bg-alt !important;
+    border-color: $color-text-secondary !important;
+  }
+}
